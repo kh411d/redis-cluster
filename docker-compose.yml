@@ -1,10 +1,14 @@
 master:
-  image: redis:3
+  image: redis:latest
+  ports:
+    - '7000:6379'
 slave:
-  image: redis:3
+  image: redis:latest
   command: redis-server --slaveof redis-master 6379
   links:
     - master:redis-master
+  ports:
+    - '5000-5006:6379'
 sentinel:
   build: sentinel
   environment:
@@ -13,3 +17,5 @@ sentinel:
   links:
     - master:redis-master
     - slave
+  ports:
+    - '26000-26005:26379'
